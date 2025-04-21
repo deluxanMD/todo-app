@@ -1,15 +1,13 @@
-import EditTodo from "@/app/components/EditTodo"
+import EditTodo from '@/app/components/EditTodo'
 
 interface Props {
-    params: {
-        id: string
-    }
+  params: {
+    id: string
+  }
 }
 
-export default async function TodoPage({params}: Props) {
-    const {id} = await params
+export default async function TodoPage({ params }: Props) {
+  const { id } = await params
 
-    return (
-        <EditTodo id={id} />
-    )
+  return <EditTodo id={id} />
 }
