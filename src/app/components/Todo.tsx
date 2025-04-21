@@ -27,6 +27,16 @@ export default function Todo({todo}: {todo: TodoType}) {
         dispatch(removeTodo({id: todo?.id}))
     }
 
+    const handleComplete = () => {
+        const canDelete = canCompleteTask(todo, todos)
+        
+        if (!canDelete) {
+            setModalOpen(true)
+        }
+
+        dispatch(markAsCompleted({id: todo?.id}))
+    }
+
     return (
        <div className="mb-2 flex items-center justify-between p-2 rounded-md border-1 border-blue-300">
             <div className="flex space-x-2 items-center justify-between">
@@ -67,7 +77,7 @@ export default function Todo({todo}: {todo: TodoType}) {
                         alt="check icon"
                         width={20}
                         height={20}
-                        onClick={() => dispatch(markAsCompleted({id: todo?.id}))}
+                        onClick={handleComplete}
                     />
                 )}
                 <Image

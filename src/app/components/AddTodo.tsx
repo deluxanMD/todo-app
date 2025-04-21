@@ -26,7 +26,7 @@ export default function AddTodo() {
                 title,
                 completed: false,
                 priority,
-                createdDate: new Date(),
+                createdDate: new Date().toISOString(),
                 dependsOn: dependentTodos
             }
         }))

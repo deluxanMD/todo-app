@@ -35,8 +35,26 @@ export const todoSlice = createSlice({
           }
         }
     },
+    removeDependentTodo: (state, action: PayloadAction<{id: string, depId: string}>) => {
+      state.todos = state.todos.map((todo) => {
+        if (todo.id === action.payload.id) {
+          return {
+            ...todo,
+            dependsOn: todo.dependsOn.filter(dId => dId !== action.payload.depId)
+          }
+        }
+
+        return todo
+      })
+    },
     markAsCompleted: (state, action: PayloadAction<{id: string}>) => {
-        state.todos = state.todos.map((todo) => {
+      const todo = state.todos.find(todo => todo.id === action.payload.id)
+        
+      if (!!todo) {
+        const canComplete = canCompleteTask(todo, state.todos)
+
+        if (canComplete) {
+          state.todos = state.todos.map((todo) => {
             if (todo.id === action.payload.id) {
                 return {
                     ...todo,
@@ -46,6 +64,10 @@ export const todoSlice = createSlice({
 
             return todo
         })
+        } else {
+          state.error = true
+        }
+      }
     },
     sortingTodos: (state, action: PayloadAction<{type: "priority" | "status"}>) => {
         const priorityOrder = {
@@ -66,6 +88,6 @@ export const todoSlice = createSlice({
   },
 })
 
-export const { addTodo, removeTodo, markAsCompleted, sortingTodos } = todoSlice.actions
+export const { addTodo, removeTodo, removeDependentTodo, markAsCompleted, sortingTodos } = todoSlice.actions
 
 export default todoSlice.reducer
