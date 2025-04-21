@@ -7,7 +7,7 @@ interface Props {
 }
 
 export default async function TodoPage({ params }: Props) {
-  const { id } = await params
+  const id = params.id
 
   return <EditTodo id={id} />
 }
