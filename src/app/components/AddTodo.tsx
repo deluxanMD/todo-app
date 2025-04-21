@@ -6,6 +6,16 @@ import { addTodo } from '../lib/features/todos/todosSlice'
 import { v4 as uuidv4 } from 'uuid'
 import { RootState } from '../lib/store'
 import Modal from './Modal'
+import Select from './Select'
+import Input from './Input'
+import Button from './Button'
+import TodoListItem from './TodoListItem'
+
+const priorityOptions = [
+  { value: 'low', label: 'Low' },
+  { value: 'medium', label: 'Medium' },
+  { value: 'high', label: 'High' },
+]
 
 type Priority = 'low' | 'medium' | 'high'
 
@@ -40,7 +50,18 @@ export default function AddTodo() {
     setTitle('')
   }
 
-  const handleChange = (_e: React.MouseEvent<HTMLDivElement>, id: string) => {
+  const handlePriority = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    setPriority(event.target.value as Priority)
+  }
+
+  const handleInput = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setTitle(event.target.value)
+  }
+
+  const handleTodoSelect = (
+    _e: React.MouseEvent<HTMLDivElement>,
+    id: string
+  ) => {
     if (!dependentTodos.includes(id)) {
       setDependentTodos((prev) => [...prev, id])
     } else {
@@ -49,52 +70,40 @@ export default function AddTodo() {
     }
   }
 
+  const openModal = () => {
+    setIsModalOpen(true)
+  }
+
+  const closeModal = () => {
+    setIsModalOpen(false)
+  }
+
   return (
     <div className="mt-10">
       <div className="flex flex-row space-x-2">
-        <select
-          className="border-1 p-2 rounded-md"
-          onChange={(e) => setPriority(e.target.value as Priority)}
-        >
-          <option value="low">Low</option>
-          <option value="medium">Medium</option>
-          <option value="high">High</option>
-        </select>
-        <input
-          className="border-1 p-2 rounded-md w-full"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-        />
-        <button
-          className={`${title === '' ? 'bg-gray-500' : 'bg-blue-500'} text-white p-2 rounded-md cursor-pointer`}
-          onClick={handleAddTodo}
-          disabled={title === ''}
-        >
-          Add
-        </button>
+        <Select options={priorityOptions} onChange={handlePriority} />
+        <Input value={title} onChange={handleInput} />
+        <Button title="Add" disabled={title === ''} onClick={handleAddTodo} />
       </div>
-      <div>
-        <button
-          className={`${title === '' ? 'bg-gray-500' : 'bg-blue-500'} text-white p-2 rounded-md cursor-pointer w-100 mt-5`}
-          onClick={() => setIsModalOpen(true)}
+      <div className="mt-5">
+        <Button
+          title="Select Dependency"
           disabled={title === ''}
-        >
-          Select Dependency
-        </button>
+          onClick={openModal}
+        />
       </div>
       <Modal
         title="Select Dependent Tasks"
         isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
+        onClose={closeModal}
       >
         {todos?.map((todo) => (
-          <div
-            key={todo?.id}
-            className={`${dependentTodos.includes(todo?.id) ? 'bg-blue-400' : 'bg-blue-300'} mb-2 rounded p-2 text-white cursor-pointer hover:bg-blue-400`}
-            onClick={(e) => handleChange(e, todo?.id)}
-          >
-            <h4>{todo?.title}</h4>
-          </div>
+          <TodoListItem
+            key={todo.id}
+            dependentTodos={dependentTodos}
+            todo={todo}
+            onClick={handleTodoSelect}
+          />
         ))}
       </Modal>
     </div>

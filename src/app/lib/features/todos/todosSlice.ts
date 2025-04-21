@@ -21,6 +21,21 @@ export const todoSlice = createSlice({
     addTodo: (state, action: PayloadAction<{ todo: Todo }>) => {
       state.todos = [...state.todos, action.payload.todo]
     },
+    updateTitle: (
+      state,
+      action: PayloadAction<{ id: string; title: string }>
+    ) => {
+      state.todos = state.todos.map((todo) => {
+        if (todo.id === action.payload.id) {
+          return {
+            ...todo,
+            title: action.payload.title,
+          }
+        }
+
+        return todo
+      })
+    },
     removeTodo: (state, action: PayloadAction<{ id: string }>) => {
       const todo = state.todos.find((todo) => todo.id === action.payload.id)
 
@@ -124,6 +139,7 @@ export const todoSlice = createSlice({
 
 export const {
   addTodo,
+  updateTitle,
   removeTodo,
   removeDependentTodo,
   markAsCompleted,

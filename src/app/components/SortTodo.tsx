@@ -1,8 +1,13 @@
 'use client'
-
 import { useDispatch } from 'react-redux'
 import { sortingTodos } from '../lib/features/todos/todosSlice'
 import { ChangeEvent } from 'react'
+import Select from './Select'
+
+const options = [
+  { value: 'priority', label: 'Priority' },
+  { value: 'status', label: 'Status' },
+]
 
 export default function SortTodo() {
   const dispatch = useDispatch()
@@ -16,12 +21,8 @@ export default function SortTodo() {
   }
 
   return (
-    <div className="flex flex-row space-x-2">
-      <p>Sort By</p>
-      <select title="Sort By" onChange={handleChange}>
-        <option>Priority</option>
-        <option>Status</option>
-      </select>
+    <div className="flex flex-row space-x-2 mt-10 mb-5">
+      <Select title="Sort By" options={options} onChange={handleChange} />
     </div>
   )
 }

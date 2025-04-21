@@ -9,6 +9,7 @@ import SortTodo from '../components/SortTodo'
 import { recurringTask } from '../lib/features/todos/todo.utils'
 import { addTodo } from '../lib/features/todos/todosSlice'
 import { v4 as uuidv4 } from 'uuid'
+import Title from '../components/Title'
 
 export default function Todos() {
   const todos = useSelector((state: RootState) => state.todos.todos)
@@ -45,18 +46,10 @@ export default function Todos() {
   return (
     <div className="flex items-center justify-center">
       <div className="mt-20 text-center w-100">
-        <h2 className="h2 uppercase font-extrabold text-4xl w-full">
-          Todo List
-        </h2>
+        <Title>Todo List</Title>
         <AddTodo />
-        {todos?.length > 0 && (
-          <div className="mt-10">
-            <SortTodo />
-          </div>
-        )}
-        <div className="mt-10">
-          {todos?.map((todo) => <Todo key={todo.id} todo={todo} />)}
-        </div>
+        {todos?.length > 0 && <SortTodo />}
+        {todos?.map((todo) => <Todo key={todo.id} todo={todo} />)}
       </div>
     </div>
   )
