@@ -1,7 +1,7 @@
 'use client'
 import { createSlice } from '@reduxjs/toolkit'
 import type { PayloadAction } from '@reduxjs/toolkit'
-import { Todo } from './todo.types'
+import { RecurringType, Todo } from './todo.types'
 import { canCompleteTask, removeAvailableInDependency } from './todo.utils'
 
 export interface TodoState {
@@ -84,10 +84,24 @@ export const todoSlice = createSlice({
 
         console.log(action.payload.type, state.todos)
     },
+    setRecurring: (state, action: PayloadAction<{id: string, recurringType: RecurringType}>) => {
+      state.todos = state.todos.map((todo) => {
+        if (todo.id === action.payload.id) {
+          return {
+            ...todo,
+            recurring: {
+              type: action.payload.recurringType,
+              lastCreatedDate: todo.recurring.lastCreatedDate
+            }
+          }
+        }
 
+        return todo
+      })
+    }
   },
 })
 
-export const { addTodo, removeTodo, removeDependentTodo, markAsCompleted, sortingTodos } = todoSlice.actions
+export const { addTodo, removeTodo, removeDependentTodo, markAsCompleted, sortingTodos, setRecurring } = todoSlice.actions
 
 export default todoSlice.reducer

@@ -4,7 +4,8 @@ import { getTodoById } from "../lib/features/todos/todo.utils"
 import { RootState } from "../lib/store"
 import { useState } from "react"
 import Image from "next/image"
-import { removeDependentTodo } from "../lib/features/todos/todosSlice"
+import { removeDependentTodo, setRecurring } from "../lib/features/todos/todosSlice"
+import { RecurringType } from "../lib/features/todos/todo.types"
 
 interface Props {
     id: string
@@ -24,7 +25,11 @@ export default function EditTodo({id}: Props) {
             completed: value?.completed ?? false,
             createdDate: value?.createdDate ?? '',
             dependsOn: value?.dependsOn ?? [],
-            priority: value?.priority ?? 'low'
+            priority: value?.priority ?? 'low',
+            recurring: {
+                type: value?.recurring.type ?? 'none',
+                lastCreatedDate: value?.recurring.lastCreatedDate ?? ''
+            }
         })
     }
 
@@ -56,6 +61,12 @@ export default function EditTodo({id}: Props) {
                             ))}
                         </div>
                     )}
+                    <select title="Recurring" className="mt-5 text-left w-100 border-1 p-2 rounded" onChange={(e) => dispatch(setRecurring({id, recurringType: e.target.value as RecurringType}))}>
+                        <option value="">Select Recurring</option>
+                        <option value="daily">Daily</option>
+                        <option value="weekly">Weekly</option>
+                        <option value="monthly">Monthly</option>
+                    </select>
                 </div>
             </div>
             <div className="mt-5">

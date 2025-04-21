@@ -27,7 +27,11 @@ export default function AddTodo() {
                 completed: false,
                 priority,
                 createdDate: new Date().toISOString(),
-                dependsOn: dependentTodos
+                dependsOn: dependentTodos,
+                recurring: {
+                    type: 'none',
+                    lastCreatedDate: new Date().toISOString(),
+                }
             }
         }))
 
