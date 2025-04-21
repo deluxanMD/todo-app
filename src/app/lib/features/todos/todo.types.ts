@@ -3,4 +3,6 @@ export interface Todo {
     title: string
     completed: boolean
     priority: 'low' | 'medium' | 'high'
+    createdDate: Date
+    dependsOn: string[]
 }

@@ -2,13 +2,16 @@
 import { createSlice } from '@reduxjs/toolkit'
 import type { PayloadAction } from '@reduxjs/toolkit'
 import { Todo } from './todo.types'
+import { canCompleteTask, removeAvailableInDependency } from './todo.utils'
 
 export interface TodoState {
   todos: Todo[]
+  error: boolean
 }
 
 const initialState: TodoState = {
   todos: [],
+  error: false
 }
 
 export const todoSlice = createSlice({
@@ -19,7 +22,18 @@ export const todoSlice = createSlice({
         state.todos = [...state.todos, action.payload.todo]
     },
     removeTodo: (state, action: PayloadAction<{id: string}>) => {
-        state.todos = state.todos.filter((todo) => todo.id !== action.payload.id)
+        const todo = state.todos.find(todo => todo.id === action.payload.id)
+        
+        if (!!todo) {
+          const canComplete = canCompleteTask(todo, state.todos)
+
+          if (canComplete) {
+            state.todos = state.todos.filter((todo) => todo.id !== action.payload.id)
+            state.todos = removeAvailableInDependency(action.payload.id, state.todos)
+          } else {
+            state.error = true
+          }
+        }
     },
     markAsCompleted: (state, action: PayloadAction<{id: string}>) => {
         state.todos = state.todos.map((todo) => {
@@ -47,7 +61,8 @@ export const todoSlice = createSlice({
         }
 
         console.log(action.payload.type, state.todos)
-    }
+    },
+
   },
 })
 
