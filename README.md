@@ -75,3 +75,9 @@ In the edit page there is a dropdown where user can select (none, daily, weekly,
 I have added some unit tests. To check the tests run correctly we can run the command `npm run test`
 
 ![Unit Tests](image-8.png)
+
+## CI Pipeline
+
+I have added a simple github actions pipeline to check the basic features like prettier, unit test.
+
+![CI Pipeline](image-9.png)
